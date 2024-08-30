@@ -1,94 +1,44 @@
+'use client';
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState } from 'react';
 
 export default function Home() {
+  
+  const [input, setInput] = useState('<p class="foo"></p>');
+  const [classNames, setClassNames] = useState([]);
+
+  async function findClassNamesInHTML(event: React.FormEvent) {
+    const response = await fetch('/api/html-rewriter');
+    const data = await response.json()
+    if (data && data.length) {
+      setClassNames(await response.json());
+    }
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const elements = event.currentTarget.elements as any;
+    findClassNamesInHTML(elements.input_html.value);
+  }
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <h1>NextJS with HTMLRewriter</h1>
+        <p>Enter some HTML, and this app will find all the class names.</p>
+        <h2>Input</h2>
+        <form action="" onSubmit={handleSubmit} className={styles.form}>
+          <input name="input_html" type="text" defaultValue={input} onChange={(event) => setInput(event.currentTarget.value)} />
+          <br />
+          <button>Submit</button>
+        </form>
+        <h2>Output</h2>
+        <ul>
+          {classNames.map((className, c) => {
+            return <li key={c}>{className}</li>
+          })}
+        </ul>
       </div>
     </main>
   );
