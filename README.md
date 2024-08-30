@@ -11,6 +11,29 @@ When you click the Submit button, the HTML should be sent to the
 Attempted import error: './dist/html_rewriter_bg.wasm?module' does not contain a default export (imported as 'wasm').
 ```
 
+Also, when you try to build the project with `npm run build` or `pnpm build`, you get a larger error:
+
+```
+./node_modules/.pnpm/htmlrewriter@0.0.9/node_modules/htmlrewriter/vercel.js
+Attempted import error: './dist/html_rewriter_bg.wasm?module' does not contain a default export (imported as 'wasm').
+
+Import trace for requested module:
+./node_modules/.pnpm/htmlrewriter@0.0.9/node_modules/htmlrewriter/vercel.js
+./src/app/api/html-rewriter/route.ts
+
+./node_modules/.pnpm/htmlrewriter@0.0.9/node_modules/htmlrewriter/dist/html_rewriter_bg.wasm?module
+Module not found: Can't resolve 'wbg'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./node_modules/.pnpm/htmlrewriter@0.0.9/node_modules/htmlrewriter/vercel.js
+./src/app/api/html-rewriter/route.ts
+
+
+> Build failed because of webpack errors
+```
+
 ## Getting Started
 
 First, run the development server:
